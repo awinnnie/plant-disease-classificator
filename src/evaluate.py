@@ -4,14 +4,18 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.metrics import average_precision_score, classification_report, confusion_matrix
+from sklearn.metrics import (
+    average_precision_score,
+    classification_report,
+    confusion_matrix,
+)
 from sklearn.preprocessing import label_binarize
 
 
 def evaluate_model(model, val_loader, label_map, device=None):
     """Compute accuracy, mAP and classification report."""
     if device is None:
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     idx_to_disease = {v: k for k, v in label_map.items()}
     model.eval()
@@ -34,17 +38,22 @@ def evaluate_model(model, val_loader, label_map, device=None):
     per_class_ap = []
     for i in range(len(label_map)):
         if y_true_bin[:, i].sum() > 0:
-            per_class_ap.append(average_precision_score(y_true_bin[:, i], all_probs[:, i]))
+            per_class_ap.append(
+                average_precision_score(y_true_bin[:, i], all_probs[:, i])
+            )
     mAP = np.mean(per_class_ap)
 
     acc = (preds == all_labels).mean()
 
     print(f"Accuracy: {acc:.4f} | mAP: {mAP:.4f}")
-    print(classification_report(
-        all_labels, preds,
-        target_names=[idx_to_disease[i] for i in range(len(label_map))],
-        zero_division=0
-    ))
+    print(
+        classification_report(
+            all_labels,
+            preds,
+            target_names=[idx_to_disease[i] for i in range(len(label_map))],
+            zero_division=0,
+        )
+    )
 
     return acc, mAP, all_probs, all_labels
 
@@ -57,11 +66,17 @@ def plot_confusion_matrix(all_probs, all_labels, label_map, save_path=None):
     disease_names = [idx_to_disease[i] for i in range(len(label_map))]
 
     plt.figure(figsize=(20, 16))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
-                xticklabels=disease_names, yticklabels=disease_names)
-    plt.xlabel('Predicted')
-    plt.ylabel('True')
-    plt.title('Confusion Matrix')
+    sns.heatmap(
+        cm,
+        annot=True,
+        fmt="d",
+        cmap="Blues",
+        xticklabels=disease_names,
+        yticklabels=disease_names,
+    )
+    plt.xlabel("Predicted")
+    plt.ylabel("True")
+    plt.title("Confusion Matrix")
     plt.xticks(rotation=90, fontsize=7)
     plt.yticks(fontsize=7)
     plt.tight_layout()
