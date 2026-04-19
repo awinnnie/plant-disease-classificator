@@ -13,7 +13,7 @@ An AI system that identifies plant diseases from leaf images regardless of the h
 | **ConvNeXt-Tiny** (deployed) | **28M** | **82.1%** | **90.3%** |
 
 ## Project Structure
-
+```
 ├── src/
 │   ├── dataset.py       # Dataset class, disease label extraction
 │   ├── model.py         # Model creation and loading
@@ -26,6 +26,7 @@ An AI system that identifies plant diseases from leaf images regardless of the h
 ├── label_map.json       # Disease class mapping
 ├── requirements.txt
 └── README.md
+```
 
 ## Setup
 
